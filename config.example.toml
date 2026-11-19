@@ -1,0 +1,30 @@
+# /opt/grjngo/config.toml
+data_dir = "/opt/grjngo/data"
+staging_dir = "/opt/grjngo/staging"     # local scratch for in-progress downloads
+library_dir = "/mnt/westerns"           # SMB mount = ErsatzTV library folder (must match LIBRARY_DIR in docker/.env)
+channel_url = "https://www.youtube.com/@GrjngoWesternMovies/videos"
+
+# v3 API key or v4 read-access token (or leave blank and set TMDB_API_KEY in docker/.env)
+tmdb_api_key = ""
+tmdb_language = "en-US"
+
+# Match confidence (0-100)
+accept_score = 80
+accept_margin = 8
+review_floor = 45
+
+# Same film as B&W original and colorized upload: "prefer_original" | "prefer_colorized" | "keep_both"
+colorized_policy = "prefer_original"
+
+# Downloads: best available up to this height. VP9 > H.264 > AV1 (the i5-8500 can't decode AV1), Opus audio, MKV.
+max_height = 1080
+max_downloads_per_run = 30
+max_probes_per_run = 200
+sleep_interval = 20         # seconds before each download, randomised up to max_sleep_interval
+max_sleep_interval = 60
+sleep_requests = 1.5        # between yt-dlp's own requests
+probe_pause = [3.0, 8.0]    # between resolution checks
+limit_rate = ""             # e.g. "8M" to cap bandwidth
+max_failures = 3            # give up on an upload after this many (non-block) failures
+
+ytdlp_args = []

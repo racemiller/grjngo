@@ -1,6 +1,17 @@
-.env
+# secrets / local settings
 config.toml
-.venv
+docker/.env
+
+# state and scratch
+data/
 staging/
-__pycache__
-cache/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# scratch inputs
+*.tsv
+review.csv
+duplicates.txt
