@@ -1,0 +1,12 @@
+[Unit]
+Description=Run grjngo pipeline
+
+[Timer]
+# Daily while the back catalog downloads (~30 movies/run). Once caught up, switch to weekly:
+#   OnCalendar=Sun *-*-* 03:30:00
+OnCalendar=*-*-* 03:30:00
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

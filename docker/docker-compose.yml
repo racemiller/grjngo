@@ -1,0 +1,37 @@
+name: grjngo
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3
+    container_name: grjngo-gluetun
+    cap_add: [NET_ADMIN]
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      VPN_SERVICE_PROVIDER: nordvpn
+      VPN_TYPE: ${VPN_TYPE:-wireguard}
+      WIREGUARD_PRIVATE_KEY: ${WIREGUARD_PRIVATE_KEY:-}
+      OPENVPN_USER: ${OPENVPN_USER:-}
+      OPENVPN_PASSWORD: ${OPENVPN_PASSWORD:-}
+      # gluetun picks a random server matching these on every (re)start -> new IP per run
+      SERVER_COUNTRIES: ${SERVER_COUNTRIES:-United States}
+      TZ: ${TZ:-America/Denver}
+    restart: "no"
+
+  worker:
+    build: .
+    image: grjngo-worker:latest
+    network_mode: "service:gluetun"   # all traffic goes through the VPN; gluetun's firewall blocks leaks
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+      TZ: ${TZ:-America/Denver}
+    volumes:
+      - /opt/grjngo:/opt/grjngo
+      # same path inside and out, so paths stored in the database work in both places
+      - ${LIBRARY_DIR:?set LIBRARY_DIR in .env}:${LIBRARY_DIR}
+    profiles: ["job"]   # only runs via `docker compose run`

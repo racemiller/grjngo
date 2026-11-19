@@ -1,0 +1,6 @@
+.env
+config.toml
+.venv
+staging/
+__pycache__
+cache/
